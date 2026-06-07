@@ -38,5 +38,3 @@ deepguard/
     ├── screenshots/
     ├── diagrams/
     └── references/
-
----
