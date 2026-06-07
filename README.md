@@ -1,26 +1,47 @@
 # DeepGuard
 
-## AI-Based Deepfake Detection System for Government Officials' Media Content
+DeepGuard is a web-based capstone project for analyzing possible deepfake media content involving government officials. It supports user login, role-based access, image/video/audio uploads, scan history, MySQL database storage, and PDF report generation.
 
-DeepGuard is a web-based deepfake detection platform designed to help citizens, journalists, researchers, and government agencies analyze media content that may contain manipulated images, videos, or audio.
-
-The project was developed as a BS Information Technology Capstone Project and provides a secure platform for media uploads, scan history management, PDF report generation, and future integration with AI-powered deepfake detection models.
+> Current version uses a placeholder/mock detector. The web app workflow is working, but the real AI model such as EfficientNet-B4, Grad-CAM, video frame analysis, and audio deepfake model must be integrated later.
 
 ---
 
-## Project Overview
+## Features
 
-DeepGuard addresses the growing problem of deepfake disinformation targeting government officials and public figures.
+- React frontend
+- FastAPI backend
+- MySQL database using XAMPP
+- JWT login authentication
+- Admin email whitelist
+- Upload image, video, and audio files
+- Store files on disk
+- Store metadata and scan results in MySQL
+- Scan history table
+- PDF report download
+- Windows local development support
 
-The system allows users to:
+---
 
-* Upload images, videos, and audio files
-* Perform media analysis
-* View scan history
-* Generate downloadable PDF reports
-* Manage users through role-based access control
+## Current Status
 
-The current version includes a complete web application workflow and is prepared for integration with machine learning models such as EfficientNet-B4 and Wav2Vec2.
+Working:
+
+- Login
+- Register
+- Admin role detection
+- Media upload
+- Scan history
+- Database insert
+- PDF report generation
+- PDF download with login token
+- MySQL connection through XAMPP
+
+Not yet real AI:
+
+- EfficientNet-B4 deepfake detection
+- Grad-CAM heatmap
+- Real video frame deepfake detection
+- Real audio deepfake recognition
 
 ---
 
@@ -37,16 +58,16 @@ deepguard/
 ├── frontend/
 │   ├── public/
 │   ├── src/
+│   │   ├── main.jsx
+│   │   └── style.css
 │   ├── package.json
 │   └── vite.config.js
 │
 ├── backend/
 │   ├── app/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   └── main.py
+│   │   ├── main.py
+│   │   └── services/
+│   │       └── detector.py
 │   │
 │   ├── uploads/
 │   │   ├── images/
@@ -65,413 +86,665 @@ deepguard/
     ├── diagrams/
     └── references/
 ```
----
-
-## Features
-
-### Authentication
-
-* User Registration
-* User Login
-* JWT Authentication
-* Role-Based Access Control
-* Admin Email Whitelisting
-
-### Media Analysis
-
-Supported File Types:
-
-#### Images
-
-* JPG
-* JPEG
-* PNG
-
-#### Videos
-
-* MP4
-* AVI
-* MOV
-* MKV
-
-#### Audio
-
-* MP3
-* WAV
-* M4A
-* FLAC
-
-### Reports
-
-* Scan History
-* PDF Report Generation
-* Timestamped Analysis Results
-
-### Administration
-
-* User Management
-* Admin Whitelist Configuration
-* Protected API Endpoints
 
 ---
 
-## Technology Stack
+## System Architecture
 
-### Frontend
-
-* React
-* Vite
-* Axios
-* Lucide React
-
-### Backend
-
-* FastAPI
-* Python
-* SQLAlchemy
-* JWT Authentication
-
-### Database
-
-* MySQL (XAMPP)
-
-### Planned AI Models
-
-#### Image Deepfake Detection
-
-* EfficientNet-B4
-* OpenCV
-* Grad-CAM
-
-#### Video Deepfake Detection
-
-* Frame Extraction
-* Face Detection
-* EfficientNet-B4 Inference
-
-#### Audio Deepfake Detection
-
-* Wav2Vec2
-* RawNet2
+```text
++----------------------+
+|      React UI        |
+|  Vite + Axios        |
++----------+-----------+
+           |
+           | REST API
+           v
++----------------------+
+|      FastAPI         |
+| Auth / Upload / PDF  |
++----------+-----------+
+           |
+           +----------------------+
+           |                      |
+           v                      v
++----------------+       +------------------+
+|     MySQL      |       |  File Storage    |
+| Users          |       | Images           |
+| Scans          |       | Videos           |
+| Results        |       | Audio            |
+| Reports Data   |       | PDF Reports      |
++----------------+       +------------------+
+```
 
 ---
 
-## Project Structure
+## System Workflow
 
-deepguard/
-
-frontend/
-src/
-public/
-
-backend/
-app/
-services/
-uploads/
-
-database/
-
-README.md
-
----
-
-## Installation
-
-### Requirements
-
-* Python 3.11
-* Node.js LTS
-* XAMPP
-* MySQL
-
----
-
-### Clone Repository
-
-git clone https://github.com/your-repository/deepguard.git
-
-cd deepguard
+```text
+User Login
+   |
+   v
+Upload Image / Video / Audio
+   |
+   v
+FastAPI validates request
+   |
+   v
+File is saved to uploads folder
+   |
+   v
+Mock detector generates result
+   |
+   v
+Result and metadata saved to MySQL
+   |
+   v
+PDF report is generated
+   |
+   v
+Result appears in dashboard and scan history
+```
 
 ---
 
-## Database Setup
+# Installation Guide
+
+## Required Software
+
+Install the following:
+
+- Python 3.11
+- Node.js LTS
+- XAMPP
+- Visual Studio Code
+- Git
+
+Recommended Python version:
+
+```text
+Python 3.11.9
+```
+
+Do not use Python 3.13 for this project because some packages may have compatibility issues.
+
+---
+
+## Step 1: Start XAMPP
+
+Open XAMPP Control Panel.
 
 Start:
 
-* Apache
-* MySQL
+```text
+Apache
+MySQL
+```
 
-from XAMPP Control Panel.
+Open phpMyAdmin:
+
+```text
+http://localhost/phpmyadmin
+```
+
+---
+
+## Step 2: Create Database
+
+In phpMyAdmin, create a database:
+
+```text
+deepguard_db
+```
+
+Then import:
+
+```text
+database/deepguard_db.sql
+```
+
+---
+
+## Step 3: Configure Backend Environment
 
 Open:
 
-http://localhost/phpmyadmin
+```text
+backend/.env
+```
 
-Create:
+Example configuration:
 
-deepguard_db
-
-Import:
-
-database/deepguard_db.sql
-
----
-
-## Backend Installation
-
-Navigate to backend folder:
-
-cd backend
-
-Create virtual environment:
-
-py -3.11 -m venv venv
-
-Activate:
-
-venv\Scripts\activate
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Run backend:
-
-python -m uvicorn app.main:app --reload
-
-Backend API:
-
-http://localhost:8000
-
-Swagger Documentation:
-
-http://localhost:8000/docs
-
----
-
-## Frontend Installation
-
-Navigate to frontend:
-
-cd frontend
-
-Install dependencies:
-
-npm install
-
-Run development server:
-
-npm run dev
-
-Frontend:
-
-http://localhost:5173
-
----
-
-## Configuration
-
-Update backend .env:
-
+```env
 APP_NAME=DeepGuard
-
-SECRET_KEY=your-secret-key
-
-DATABASE_URL=mysql+pymysql://root:password@127.0.0.1:3306/deepguard_db
-
+SECRET_KEY=change-this-secret-key
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+DATABASE_URL=mysql+pymysql://root:your_password@127.0.0.1:3306/deepguard_db
 UPLOAD_DIR=uploads
+ALLOWED_ADMIN_EMAILS=admin@deepguard.local,your_email@gmail.com
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+```
 
-ALLOWED_ADMIN_EMAILS=[admin@example.com](mailto:admin@example.com)
+If your MySQL root has no password:
 
----
+```env
+DATABASE_URL=mysql+pymysql://root:@127.0.0.1:3306/deepguard_db
+```
 
-## Usage
-
-### Register
-
-Create a new account.
-
-Only emails listed in:
-
-ALLOWED_ADMIN_EMAILS
-
-will receive Admin privileges.
-
-All other users are assigned the User role.
-
----
-
-### Login
-
-Login using registered credentials.
-
-Successful login generates a JWT access token.
-
----
-
-### Upload Media
-
-Upload:
-
-* Images
-* Videos
-* Audio Files
-
-Click:
-
-Upload and Analyze
-
-The system stores:
-
-* Uploaded File
-* Metadata
-* Scan Results
-* PDF Report
-
----
-
-### View Scan History
-
-The Scan History section displays:
-
-* File Name
-* Media Type
-* Result
-* Confidence Score
-* Date Analyzed
-* PDF Report Link
-
----
-
-## Current Implementation
-
-The current version contains:
-
-* Authentication
-* User Management
-* Upload Management
-* Database Integration
-* Scan History
-* PDF Reports
-
-The detector currently uses a placeholder implementation for demonstration purposes.
-
----
-
-## Planned AI Integration
-
-Future versions will replace the placeholder detector with:
-
-### Images
-
-EfficientNet-B4
-
-Outputs:
-
-* Real/Fake Classification
-* Confidence Score
-* Grad-CAM Visualization
-
-### Videos
-
-Process:
-
-Video → Frame Extraction → Face Detection → Deepfake Analysis
-
-Outputs:
-
-* Real/Fake Classification
-* Suspicious Frame Identification
-
-### Audio
-
-Outputs:
-
-* Real/Fake Classification
-* Confidence Score
-* Waveform Analysis
-
----
-
-## Testing
-
-### Functional Testing
-
-#### Authentication
-
-* Login with valid credentials
-* Login with invalid credentials
-* Register new user
-* Logout
-
-#### Upload Testing
-
-* JPG Upload
-* PNG Upload
-* MP4 Upload
-* MP3 Upload
-* Empty Upload Validation
-
-#### Reports
-
-* PDF Generation
-* PDF Download
-
-#### Database
-
-* User Creation
-* Scan Record Creation
-* History Retrieval
-
----
-
-## Expected Output
-
-After a successful upload:
-
-* File is stored in uploads folder
-* Scan result is displayed
-* Scan history is updated
-* PDF report is generated
-* Database record is created
+If your password has special characters, URL encode them.
 
 Example:
 
+```text
+$ = %24
+# = %23
+@ = %40
+```
+
+---
+
+## Step 4: Backend Setup
+
+Open Command Prompt or PowerShell.
+
+Go to backend folder:
+
+```bash
+cd backend
+```
+
+Create virtual environment using Python 3.11:
+
+```bash
+py -3.11 -m venv venv
+```
+
+Activate virtual environment:
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+If bcrypt has issues, run:
+
+```bash
+pip uninstall bcrypt passlib -y
+pip install "bcrypt==4.0.1" "passlib[bcrypt]==1.7.4"
+```
+
+Run backend:
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+Open backend API docs:
+
+```text
+http://localhost:8000/docs
+```
+
+Expected result:
+
+```text
+FastAPI Swagger UI should appear.
+```
+
+---
+
+## Step 5: Frontend Setup
+
+Open another Command Prompt or PowerShell.
+
+Go to frontend folder:
+
+```bash
+cd frontend
+```
+
+Install packages:
+
+```bash
+npm install
+```
+
+Run React development server:
+
+```bash
+npm run dev
+```
+
+Open frontend:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# Daily Startup Procedure
+
+Every time you want to run the project:
+
+## 1. Start XAMPP
+
+Start:
+
+```text
+Apache
+MySQL
+```
+
+## 2. Start Backend
+
+```bash
+cd backend
+venv\Scripts\activate
+python -m uvicorn app.main:app --reload
+```
+
+## 3. Start Frontend
+
+Open another terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# Login and Admin Setup
+
+Admin users are controlled by:
+
+```env
+ALLOWED_ADMIN_EMAILS=
+```
+
+Example:
+
+```env
+ALLOWED_ADMIN_EMAILS=admin@deepguard.local,palaciodefaylona@gmail.com
+```
+
+Only emails listed there become admin.
+
+All other registered users become normal users.
+
+---
+
+# File Storage Best Practice
+
+DeepGuard does not store images, videos, or audio files directly inside the database.
+
+Instead:
+
+```text
+uploads/images/
+uploads/videos/
+uploads/audio/
+uploads/reports/
+```
+
+The database stores:
+
+```text
+filename
+file path
+media type
+prediction
+confidence
+date created
+report path
+```
+
+This is better than storing large files as Base64 or BLOBs.
+
+---
+
+# How to Test
+
+## Test 1: Register
+
+Register with an email.
+
+Expected:
+
+```text
+User is created.
+```
+
+If the email is in `ALLOWED_ADMIN_EMAILS`, role should be:
+
+```text
+admin
+```
+
+Otherwise:
+
+```text
+user
+```
+
+---
+
+## Test 2: Login
+
+Login with your registered account.
+
+Expected:
+
+```text
+Dashboard opens.
+User email and role appear at the top.
+```
+
+---
+
+## Test 3: Upload Image
+
+Upload:
+
+```text
+.jpg
+.jpeg
+.png
+```
+
+Expected:
+
+```text
+Latest Result appears.
+Scan History updates.
+PDF button appears.
+Record is inserted into MySQL.
+```
+
+---
+
+## Test 4: Upload Video
+
+Upload:
+
+```text
+.mp4
+.avi
+.mov
+.mkv
+```
+
+Expected:
+
+```text
+Upload succeeds.
+Result appears.
+History updates.
+```
+
+---
+
+## Test 5: Upload Audio
+
+Upload:
+
+```text
+.mp3
+.wav
+.m4a
+.flac
+```
+
+Expected:
+
+```text
+Upload succeeds.
+Result appears.
+History updates.
+```
+
+---
+
+## Test 6: PDF Download
+
+Click:
+
+```text
+PDF
+```
+
+or:
+
+```text
+Download PDF Report
+```
+
+Expected:
+
+```text
+PDF downloads successfully.
+```
+
+Important:
+
+Do not manually open this in the browser:
+
+```text
+http://localhost:8000/scans/1/report
+```
+
+That direct URL will show:
+
+```json
+{"detail":"Missing login token"}
+```
+
+This happens because a direct browser URL does not include the JWT login token.
+
+Use the PDF button inside the React app.
+
+---
+
+## Test 7: Database Check
+
+Open:
+
+```text
+http://localhost/phpmyadmin
+```
+
+Go to:
+
+```text
+deepguard_db
+```
+
+Check:
+
+```text
+users
+scans
+```
+
+Expected:
+
+```text
+users table contains registered users.
+scans table contains uploaded file records.
+```
+
+---
+
+## Test 8: Upload Folder Check
+
+Go to:
+
+```text
+backend/uploads/
+```
+
+Expected uploaded files:
+
+```text
+images/
+videos/
+audio/
+reports/
+```
+
+---
+
+# Expected Output Example
+
+After uploading an image:
+
+```text
+Latest Result
+
+File: sample.jpg
 Result: Real
-
 Confidence: 71.97%
+Explanation: Image facial-region analysis completed.
+PDF Report: Available
+```
 
-Media Type: Image
+Scan history should show:
 
-Report: PDF Available
-
----
-
-## Security
-
-* JWT Authentication
-* Password Hashing using bcrypt
-* Role-Based Authorization
-* Admin Email Whitelisting
-* Protected API Endpoints
-
----
-
-## Authors
-
-BS Information Technology
-
-Capstone Project
-
-Polytechnic University of the Philippines
-
-Academic Year 2025–2026
+```text
+ID
+File
+Type
+Result
+Confidence
+Date
+Report
+```
 
 ---
 
-## Disclaimer
+# Troubleshooting
 
-This project is intended for academic and research purposes.
+## Uvicorn not found
 
-The current implementation contains placeholder detection logic and serves as a foundation for future AI-powered deepfake detection integration.
+Run:
 
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+instead of:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+## No module named app
+
+Make sure you are inside the backend folder:
+
+```bash
+cd backend
+python -m uvicorn app.main:app --reload
+```
+
+---
+
+## MySQL connection refused
+
+Check:
+
+- XAMPP MySQL is running
+- Database exists
+- `.env` uses correct password
+- `DATABASE_URL` uses `127.0.0.1`
+
+Example:
+
+```env
+DATABASE_URL=mysql+pymysql://root:password@127.0.0.1:3306/deepguard_db
+```
+
+---
+
+## bcrypt error
+
+Use Python 3.11 and run:
+
+```bash
+pip uninstall bcrypt passlib -y
+pip install "bcrypt==4.0.1" "passlib[bcrypt]==1.7.4"
+```
+
+---
+
+## Missing login token on upload
+
+Clear browser storage, then login again.
+
+Chrome:
+
+```text
+F12 → Application → Local Storage → Clear
+```
+
+Then login again.
+
+---
+
+## Missing login token on PDF
+
+Use the PDF button inside the React app.
+
+Do not open the backend report URL manually.
+
+---
+
+# Notes for Capstone Defense
+
+The current version demonstrates:
+
+- Web application implementation
+- Authentication
+- Role-based access
+- File upload
+- Database integration
+- Scan history
+- PDF report generation
+
+The current AI detection is a placeholder.
+
+For final defense, replace:
+
+```text
+backend/app/services/detector.py
+```
+
+with real AI model inference.
+
+Recommended future AI implementation:
+
+```text
+Image: EfficientNet-B4 + Grad-CAM
+Video: Frame extraction + EfficientNet-B4
+Audio: Wav2Vec2 or RawNet2
+```
+
+---
+
+# Disclaimer
+
+This project is for academic and capstone development purposes. The current version uses mock AI detection and should not be used as a final real-world deepfake verification tool until trained and validated AI models are integrated.
