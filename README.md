@@ -650,19 +650,6 @@ instead of:
 uvicorn app.main:app --reload
 ```
 
----
-
-## No module named app
-
-Make sure you are inside the backend folder:
-
-```bash
-cd backend
-python -m uvicorn app.main:app --reload
-```
-
----
-
 ## MySQL connection refused
 
 Check:
