@@ -1,0 +1,74 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# FastAPI / backend runtime files
+backend/.env
+backend/.env.*
+backend/venv/
+backend/__pycache__/
+backend/app/__pycache__/
+
+# Uploaded media and generated reports
+backend/uploads/
+uploads/
+*.pdf
+
+# Keep upload folders if needed
+!backend/uploads/.gitkeep
+!backend/uploads/images/.gitkeep
+!backend/uploads/videos/.gitkeep
+!backend/uploads/audio/.gitkeep
+!backend/uploads/reports/.gitkeep
+
+# Node / React
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Database dumps / local DB files
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+database/*.sql
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Cache
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build files
+build/
+coverage/
