@@ -432,6 +432,8 @@ This project is intended for academic and research purposes.
 
 The current implementation contains placeholder detection logic and serves as a foundation for future AI-powered deepfake detection integration.
 
+---
+
 deepguard/
 │
 ├── README.md
