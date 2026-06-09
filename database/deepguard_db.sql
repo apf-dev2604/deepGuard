@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS deepguard_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE deepguard_db;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(255) NULL,
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS scans (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  original_filename VARCHAR(255) NOT NULL,
+  stored_filename VARCHAR(255) NOT NULL,
+  file_path TEXT NOT NULL,
+  modality VARCHAR(50) NOT NULL,
+  prediction VARCHAR(50) NOT NULL,
+  confidence FLOAT NOT NULL,
+  explanation TEXT NULL,
+  model_used VARCHAR(255) NULL,
+  report_path TEXT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_scans_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

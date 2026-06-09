@@ -92,7 +92,7 @@ function AuthPage({ onLogin }) {
           <Shield size={38} />
           <div>
             <h1>DeepGuard</h1>
-            <p>Multi-modal deepfake detection starter system</p>
+            <p>Real AI-based multi-modal deepfake scanner</p>
           </div>
         </div>
 
@@ -138,8 +138,8 @@ function AuthPage({ onLogin }) {
         {message && <p className="message">{message}</p>}
 
         <p className="hint">
-          Default first test account: register/login using
-          admin@deepguard.local / admin123.
+          First test: register/login using admin@deepguard.local / admin123.
+          First AI scan may take time while models download.
         </p>
       </section>
     </main>
@@ -273,8 +273,8 @@ function Dashboard({ user, logout, token }) {
           </h2>
 
           <p>
-            Upload image, video, or audio. This starter package stores files on
-            disk and saves metadata/results in MySQL.
+            Upload image, video, or audio. DeepGuard uses real pretrained AI
+            models for inference, stores files on disk, and saves metadata in MySQL.
           </p>
 
           <form onSubmit={upload} className="upload">
@@ -285,7 +285,7 @@ function Dashboard({ user, logout, token }) {
             />
 
             <button disabled={busy}>
-              {busy ? 'Analyzing...' : 'Upload and Analyze'}
+              {busy ? 'Analyzing with AI...' : 'Upload and Analyze'}
             </button>
           </form>
 
@@ -298,20 +298,20 @@ function Dashboard({ user, logout, token }) {
 
         <div className="card">
           <h2>
-            <FileText /> Project Scope
+            <FileText /> Detection Scope
           </h2>
 
           <ul>
-            <li>Image deepfake detection placeholder</li>
-            <li>Video deepfake detection placeholder</li>
-            <li>Audio deepfake recognition placeholder</li>
+            <li>Image deepfake detection using pretrained image model</li>
+            <li>Video deepfake detection using OpenCV frame extraction</li>
+            <li>Voice/audio deepfake detection using pretrained audio model</li>
             <li>PDF report generation</li>
             <li>Role-based scan history</li>
           </ul>
 
           <p className="note">
-            For final defense, replace backend/app/services/detector.py with
-            trained EfficientNet-B4/video/audio model inference.
+            The first scan may take several minutes because Hugging Face model
+            files are downloaded and cached locally.
           </p>
         </div>
       </section>
@@ -330,6 +330,7 @@ function Dashboard({ user, logout, token }) {
                 <th>Type</th>
                 <th>Result</th>
                 <th>Confidence</th>
+                <th>Model</th>
                 <th>Date</th>
                 <th>Report</th>
               </tr>
@@ -351,6 +352,7 @@ function Dashboard({ user, logout, token }) {
                     </span>
                   </td>
                   <td>{s.confidence}%</td>
+                  <td className="model-cell">{s.model_used || 'N/A'}</td>
                   <td>{new Date(s.created_at).toLocaleString()}</td>
                   <td>
                     <button
@@ -389,6 +391,7 @@ function Result({ scan, downloadReport }) {
         Confidence: <b>{scan.confidence}%</b>
       </p>
 
+      <p><b>Model:</b> {scan.model_used || 'N/A'}</p>
       <p>{scan.explanation}</p>
 
       <button
